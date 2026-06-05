@@ -1,2 +1,5 @@
-A Python project that compares Canada's Big Five banks (RBC, TD, Scotiabank, BMO, and CIBC) on long-run returns, volatility, and dividend income using historical stock data.
 
+
+ ![Visuals](demo.jpg)
+
+ demo: https://big-five-banks-of-canada-analysis.streamlit.app/
