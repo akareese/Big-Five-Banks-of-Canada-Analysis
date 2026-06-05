@@ -1,4 +1,4 @@
-The dashboard shows an Investment Growth line chart tracking the value of $1 invested in each bank over time, a Risk vs Return scatter plot mapping annualized volatility against returns, a Trailing Dividend Yield bar chart comparing each bank's yield, and a Daily Return Correlation heatmap showing how closely the banks move together.
+A Python data analysis project comparing Canada’s Big Five banks using historical stock data. Built with Pandas, NumPy, and Plotly to calculate annualized returns, volatility, dividend yields, and return correlations, with interactive visualizations including growth, risk-return, dividend yield, and correlation charts.
 
  ![Visuals](demo.jpg)
 
