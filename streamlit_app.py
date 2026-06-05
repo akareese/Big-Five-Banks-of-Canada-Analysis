@@ -20,6 +20,8 @@ COLORS = {
     "CM.TO": "#8B0000",
 }
 
+STATIC = {"staticPlot": True, "displayModeBar": False}
+
 st.set_page_config(
     page_title="Big Five Canadian Banks",
     page_icon="🍁",
@@ -39,25 +41,9 @@ def annualise_return(series: pd.Series) -> float:
     return (series.iloc[-1] / series.iloc[0]) ** (1 / years) - 1
 
 
-st.sidebar.header("Controls")
-
-today = dt.date.today()
-
-start_date = st.sidebar.date_input(
-    "Start date", value=dt.date(2015, 1, 1),
-    min_value=dt.date(2005, 1, 1), max_value=today,
-)
-end_date = st.sidebar.date_input(
-    "End date", value=min(dt.date(2024, 12, 31), today),
-    min_value=dt.date(2005, 1, 2), max_value=today,
-)
-
-selected = st.sidebar.multiselect(
-    "Banks to compare",
-    options=list(BANKS),
-    default=list(BANKS),
-    format_func=lambda t: BANKS[t],
-)
+selected = list(BANKS)
+start_date = "2015-01-01"
+end_date = dt.date.today().isoformat()
 
 st.title("🍁 Big Five Canadian Banks — Showdown")
 st.write(
@@ -65,27 +51,10 @@ st.write(
     "dividend income, and how tightly they move together."
 )
 
-if not selected:
-    st.warning("Pick at least one bank in the sidebar.")
-    st.stop()
-if start_date >= end_date:
-    st.warning("Start date must be before end date.")
-    st.stop()
-
-prices_all, yields, source = get_data(str(start_date), str(end_date))
+prices_all, yields, source = get_data(start_date, end_date)
 prices = prices_all[selected]
 rets = prices.pct_change().dropna()
 labels = {t: BANKS[t] for t in selected}
-
-if source == "yfinance":
-    st.success("Live data from Yahoo Finance", icon="✅")
-else:
-    st.info(
-        "Showing **simulated** data — Yahoo Finance was unreachable or "
-        "rate-limited. Numbers are illustrative, not real. Run locally with "
-        "internet for live figures.",
-        icon="ℹ️",
-    )
 
 summary = pd.DataFrame({
     "Total Return": prices.iloc[-1] / prices.iloc[0] - 1,
@@ -102,8 +71,7 @@ c2.metric("Highest dividend yield",
           labels[summary["Dividend Yield"].idxmax()],
           f"{summary['Dividend Yield'].max() * 100:.1f}%")
 c3.metric("Avg. pairwise correlation",
-          f"{rets.corr().where(~np.eye(len(selected), dtype=bool)).stack().mean():.2f}"
-          if len(selected) > 1 else "—")
+          f"{rets.corr().where(~np.eye(len(selected), dtype=bool)).stack().mean():.2f}")
 
 st.divider()
 
@@ -119,11 +87,11 @@ with left:
             line=dict(color=COLORS[t], width=2),
         ))
     fig.update_layout(
-        yaxis_title="Value (start = $1)", hovermode="x unified",
+        yaxis_title="Value (start = $1)",
         margin=dict(l=10, r=10, t=10, b=10), legend_title_text="",
         height=380,
     )
-    st.plotly_chart(fig, width='stretch')
+    st.plotly_chart(fig, config=STATIC, width='stretch')
 
 with right:
     st.subheader("Risk vs Return (Annualised)")
@@ -141,7 +109,7 @@ with right:
         xaxis_title="Volatility (%)", yaxis_title="Return (%)",
         margin=dict(l=10, r=10, t=10, b=10), height=380,
     )
-    st.plotly_chart(fig, width='stretch')
+    st.plotly_chart(fig, config=STATIC, width='stretch')
 
 left2, right2 = st.columns(2)
 
@@ -157,22 +125,19 @@ with left2:
         yaxis_title="Yield (%)", margin=dict(l=10, r=10, t=10, b=10),
         height=360,
     )
-    st.plotly_chart(fig, width='stretch')
+    st.plotly_chart(fig, config=STATIC, width='stretch')
 
 with right2:
     st.subheader("Daily-Return Correlation")
-    if len(selected) > 1:
-        corr = rets.corr()
-        short = [labels[t].split("(")[0].strip() for t in corr.columns]
-        fig = px.imshow(
-            corr.values, x=short, y=short,
-            color_continuous_scale="YlGnBu", zmin=corr.values.min(), zmax=1,
-            text_auto=".2f", aspect="auto",
-        )
-        fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), height=360)
-        st.plotly_chart(fig, width='stretch')
-    else:
-        st.caption("Select two or more banks to see correlations.")
+    corr = rets.corr()
+    short = [labels[t].split("(")[0].strip() for t in corr.columns]
+    fig = px.imshow(
+        corr.values, x=short, y=short,
+        color_continuous_scale="YlGnBu", zmin=corr.values.min(), zmax=1,
+        text_auto=".2f", aspect="auto",
+    )
+    fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), height=360)
+    st.plotly_chart(fig, config=STATIC, width='stretch')
 
 st.divider()
 st.subheader("Comparison table")
@@ -184,16 +149,4 @@ st.dataframe(
         "Ann. Volatility": "{:.1%}", "Dividend Yield": "{:.1%}",
     }),
     width='stretch',
-)
-
-with st.expander("💡 The interesting takeaway"):
-    st.write(
-        "The correlation panel is the real story: the Big Five move together so "
-        "tightly (typically 0.7–0.9 daily-return correlation) that holding all "
-        "five gives far less diversification than it looks like — you mostly own "
-        "one big bet on Canadian banking."
-    )
-
-st.caption(
-    f"Data source: {source} · {prices.index[0].date()} → {prices.index[-1].date()}"
 )
