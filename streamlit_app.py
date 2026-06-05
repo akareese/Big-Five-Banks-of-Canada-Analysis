@@ -93,7 +93,7 @@ with left:
     st.plotly_chart(fig, config=STATIC, width='stretch')
 
 with right:
-    st.subheader("Risk vs Return (Annualised)")
+    st.subheader("Risk vs Return (Annualized)")
     fig = go.Figure()
     for t in selected:
         fig.add_trace(go.Scatter(
@@ -127,7 +127,7 @@ with left2:
     st.plotly_chart(fig, config=STATIC, width='stretch')
 
 with right2:
-    st.subheader("Daily-Return Correlation")
+    st.subheader("Daily Return Correlation")
     corr = rets.corr()
     short = [labels[t].split("(")[0].strip() for t in corr.columns]
     fig = px.imshow(
