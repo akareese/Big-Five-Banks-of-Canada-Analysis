@@ -47,7 +47,7 @@ end_date = dt.date.today().isoformat()
 
 st.title("Big Five Canadian Banks")
 st.write(
-    "Compares RBC, TD, Scotiabank, BMO, and CIBC on long-run returns, risk, and dividend income."
+    "Compares RBC, TD, Scotiabank, BMO, and CIBC on long-run returns, volatility, and dividend income."
 )
 
 prices_all, yields, source = get_data(start_date, end_date)
