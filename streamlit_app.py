@@ -45,7 +45,7 @@ selected = list(BANKS)
 start_date = "2015-01-01"
 end_date = dt.date.today().isoformat()
 
-st.title("🍁 Big Five Canadian Banks — Showdown")
+st.title("🍁 Big Five Canadian Banks — Market Analysis")
 st.write(
     "Compare **RBC, TD, Scotiabank, BMO, and CIBC** on long-run return, risk, "
     "dividend income, and how tightly they move together."
@@ -78,7 +78,7 @@ st.divider()
 left, right = st.columns(2)
 
 with left:
-    st.subheader("Growth of One Dollar Invested")
+    st.subheader("Investment Growth")
     growth = prices / prices.iloc[0]
     fig = go.Figure()
     for t in selected:
