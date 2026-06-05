@@ -45,10 +45,9 @@ selected = list(BANKS)
 start_date = "2015-01-01"
 end_date = dt.date.today().isoformat()
 
-st.title("🍁 Big Five Canadian Banks — Market Analysis")
+st.title("Big Five Canadian Banks")
 st.write(
-    "Compare **RBC, TD, Scotiabank, BMO, and CIBC** on long-run return, risk, "
-    "dividend income, and how tightly they move together."
+    "Compares RBC, TD, Scotiabank, BMO, and CIBC on long-run returns, risk, and dividend income."
 )
 
 prices_all, yields, source = get_data(start_date, end_date)
