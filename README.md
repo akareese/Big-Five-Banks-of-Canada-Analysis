@@ -2,4 +2,4 @@ A Python data analysis project comparing Canada’s Big Five banks using stock m
 
  ![Visuals](demo.jpg)
 
- demo: https://big-five-banks-of-canada-analysis.streamlit.app/
+ demo: https://canadian-banking-analysis.streamlit.app/
