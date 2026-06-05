@@ -92,6 +92,10 @@ with left:
     )
     st.plotly_chart(fig, config=STATIC, width='stretch')
 
+st.caption(
+    "Tracks the cumulative growth of a $1 investment since 2015, allowing comparison of long-term shareholder returns across Canada's Big Five banks."
+)
+
 with right:
     st.subheader("Risk vs Return (Annualized)")
     fig = go.Figure()
@@ -110,6 +114,10 @@ with right:
     )
     st.plotly_chart(fig, config=STATIC, width='stretch')
 
+st.caption(
+    "Evaluates each bank's risk-return profile using annualized volatility and returns. Higher returns with lower volatility indicate stronger performance."
+)
+
 left2, right2 = st.columns(2)
 
 with left2:
@@ -124,7 +132,11 @@ with left2:
         yaxis_title="Yield (%)", margin=dict(l=10, r=10, t=10, b=10),
         height=360,
     )
-    st.plotly_chart(fig, config=STATIC, width='stretch')
+   st.plotly_chart(fig, config=STATIC, width='stretch')
+
+st.caption(
+    "Compares trailing dividend yields to assess the income potential offered by each bank's stock."
+)
 
 with right2:
     st.subheader("Daily Return Correlation")
@@ -137,6 +149,10 @@ with right2:
     )
     fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), height=360)
     st.plotly_chart(fig, config=STATIC, width='stretch')
+
+st.caption(
+    "Shows the relationship between daily stock returns. High correlations suggest the banks tend to react similarly to market conditions."
+)
 
 st.divider()
 st.subheader("Comparison table")
